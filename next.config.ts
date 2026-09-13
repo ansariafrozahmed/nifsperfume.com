@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.nifsperfume.com", pathname: "/**" },
     ],
   },
+  trailingSlash: true,
 };
 
 export default nextConfig;
