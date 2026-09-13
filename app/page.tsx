@@ -4,54 +4,38 @@ import { CategoryGrid } from "@/components/category-grid";
 import { CollectionProductGrid, ProductGrid } from "@/components/product-grid";
 import { Reveal } from "@/components/reveal";
 
-// width/height must match each file's real pixel size, or the space reserved
-// before the image loads will be the wrong shape.
-const HERO_DESKTOP = {
-  src: "https://images.nifsperfume.com/nifsperfumehero.jpeg",
-  width: 1672,
-  height: 941,
-};
-const HERO_MOBILE = {
-  src: "https://images.nifsperfume.com/nifsperfumeheromobile.jpeg",
-  width: 1024,
-  height: 1536,
-};
+const HERO_DESKTOP =
+  "https://images.nifsperfume.com/nifsperfumehero.jpeg";
+
+const HERO_MOBILE =
+  "https://images.nifsperfume.com/nifsperfumeheromobile.jpeg";
+
 const HERO_ALT = "The NIFS Perfume collection";
 
 export default function HomePage() {
-  // Art direction: a landscape hero on desktop, a portrait crop on mobile.
-  // <picture> lets the browser download only the one that matches.
-  const heroCommon = { alt: HERO_ALT, sizes: "100vw", quality: 100 };
-  const {
-    props: { srcSet: heroDesktop },
-  } = getImageProps({ ...heroCommon, ...HERO_DESKTOP });
-  const {
-    props: { srcSet: heroMobile, ...heroImgProps },
-  } = getImageProps({ ...heroCommon, ...HERO_MOBILE });
+  
 
   return (
     <>
-      {/* ————— HERO: the photograph speaks ————— */}
       <section className="relative overflow-hidden bg-cream">
-        <div className="animate-hero-zoom">
-          <picture className="block w-full">
-            <source
-              media="(min-width: 1024px)"
-              srcSet={heroDesktop}
-              width={HERO_DESKTOP.width}
-              height={HERO_DESKTOP.height}
-            />
-            <img
-              {...heroImgProps}
-              alt={HERO_ALT}
-              srcSet={heroMobile}
-              loading="eager"
-              fetchPriority="high"
-              className="block h-auto w-full"
-            />
-          </picture>
-        </div>
-      </section>
+  {/* Desktop */}
+  <img
+    src={HERO_DESKTOP}
+    alt={HERO_ALT}
+    className="hidden w-full h-auto md:block"
+    loading="eager"
+    fetchPriority="high"
+  />
+
+  {/* Mobile */}
+  <img
+    src={HERO_MOBILE}
+    alt={HERO_ALT}
+    className="block w-full h-auto md:hidden"
+    loading="eager"
+    fetchPriority="high"
+  />
+</section>
 
       {/* ————— SHOP BY CATEGORY ————— */}
       <CategoryGrid />
