@@ -14,10 +14,10 @@ export default function NotFound() {
         however, are right where you left them.
       </p>
       <Link
-        href="/products"
+        href="/collections"
         className="mt-9 bg-ink px-10 py-4 text-[11px] font-medium uppercase tracking-[0.28em] text-white transition-colors duration-300 hover:bg-gold"
       >
-        Shop All Fragrances
+        Explore Collections
       </Link>
     </div>
   );

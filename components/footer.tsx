@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { NewsletterForm } from "@/components/newsletter-form";
 import { collections, products } from "@/lib/products";
+import { contact, telHref } from "@/lib/site";
 
 const socials = [
   {
@@ -22,15 +22,13 @@ const socials = [
 ];
 
 export function Footer() {
-  const bestsellers = products.filter((p) => p.badge === "Bestseller");
-
   return (
     <footer className="bg-charcoal text-white">
       <div className="mx-auto max-w-7xl px-5 pb-10 pt-20 lg:px-10">
         <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.5fr]">
           <div>
             <Image
-              src="/logo-white.png"
+              src="https://images.nifsperfume.com/logo-white.png"
               alt="NIFS PERFUME"
               width={500}
               height={350}
@@ -56,12 +54,12 @@ export function Footer() {
             </div>
           </div>
 
-          <nav aria-label="Bestsellers">
+          <nav aria-label="Fragrances">
             <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-gold-light">
-              Bestsellers
+              Fragrances
             </p>
             <ul className="mt-6 space-y-3.5 text-sm font-light text-white/60">
-              {bestsellers.map((p) => (
+              {products.map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={`/products/${p.slug}`}
@@ -74,26 +72,31 @@ export function Footer() {
             </ul>
           </nav>
 
-          <nav aria-label="Quick links">
+          <nav aria-label="Collections">
             <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-gold-light">
-              Explore
+              Collections
             </p>
             <ul className="mt-6 space-y-3.5 text-sm font-light text-white/60">
-              <li>
-                <Link href="/products" className="transition-colors hover:text-white">
-                  Shop All
-                </Link>
-              </li>
               {collections.map((c) => (
-                <li key={c.key}>
+                <li key={c.handle}>
                   <Link
-                    href={`/products?collection=${c.key}`}
+                    href={`/collections/${c.handle}`}
                     className="transition-colors hover:text-white"
                   >
-                    {c.label}
+                    {c.title}
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/collections" className="transition-colors hover:text-white">
+                  All Collections
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="transition-colors hover:text-white">
+                  About Us
+                </Link>
+              </li>
               <li>
                 <Link href="/contact" className="transition-colors hover:text-white">
                   Contact Us
@@ -104,24 +107,26 @@ export function Footer() {
 
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-gold-light">
-              The Private List
+              Need Help?
             </p>
-            <p className="mt-6 text-sm font-light leading-[1.9] text-white/55">
-              10% off your first order, plus launch alerts and exclusive
-              offers. One letter a month, nothing more.
-            </p>
-            <div className="mt-6">
-              <NewsletterForm />
-            </div>
-            <p className="mt-7 text-sm font-light leading-relaxed text-white/55">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-white/80">
-                Need help?
-              </span>
-              <br />
-              <span className="mt-2 inline-block">
-                hello@nifsperfume.com · +91 98000 00000
-              </span>
-            </p>
+            <ul className="mt-6 space-y-4 text-sm font-light text-white/60">
+              <li>
+                <span className="block text-[10px] uppercase tracking-[0.25em] text-white/35">
+                  WhatsApp
+                </span>
+                <a href={telHref} className="mt-1 inline-block transition-colors hover:text-white">
+                  {contact.phoneDisplay}
+                </a>
+              </li>
+              <li>
+                <span className="block text-[10px] uppercase tracking-[0.25em] text-white/35">
+                  Email
+                </span>
+                <a href={`mailto:${contact.email}`} className="mt-1 inline-block transition-colors hover:text-white">
+                  {contact.email}
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 

@@ -38,7 +38,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
     const q = query.trim().toLowerCase();
     if (!q) return products;
     return products.filter((p) =>
-      [p.name, p.family, p.tagline, ...p.notes.top, ...p.notes.heart, ...p.notes.base]
+      [p.name, p.family, p.tagline, ...p.notes.top, ...p.notes.middle, ...p.notes.base]
         .join(" ")
         .toLowerCase()
         .includes(q),
@@ -89,7 +89,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
         {results.length === 0 ? (
           <p className="mt-10 text-sm font-light text-muted">
             Nothing matches “{query}”. Try a note like{" "}
-            <em>vanilla</em>, <em>oud</em> or <em>citrus</em>.
+            <em>vanilla</em>, <em>lavender</em> or <em>bergamot</em>.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-line">

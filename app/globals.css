@@ -125,12 +125,27 @@ body {
   animation: scrollhint 1.9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+@keyframes ticker {
+  from {
+    opacity: 0;
+    transform: translateY(70%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-ticker {
+  animation: ticker 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-fadein,
   .animate-hero-zoom,
   .animate-marquee,
-  .animate-scrollhint {
+  .animate-scrollhint,
+  .animate-ticker {
     animation: none;
   }
 }
@@ -160,6 +175,7 @@ body {
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .link-sweep:hover::after,
+.sweep-parent:hover .link-sweep::after,
 .link-sweep[aria-current="page"]::after {
   transform: scaleX(1);
   transform-origin: left;

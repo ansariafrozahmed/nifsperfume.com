@@ -28,7 +28,7 @@ export function WishlistGrid() {
           Tap the heart on any fragrance to keep it here while you decide.
         </p>
         <Link
-          href="/products"
+          href="/collections"
           className="mt-8 inline-block bg-ink px-10 py-4 text-[11px] font-medium uppercase tracking-[0.28em] text-white transition-colors duration-300 hover:bg-gold"
         >
           Browse Fragrances

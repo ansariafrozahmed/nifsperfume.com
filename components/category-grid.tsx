@@ -1,27 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/reveal";
+import { collections } from "@/lib/products";
 
-const tiles = [
-  {
-    href: "/products?for=him",
-    label: "Men",
-    sub: "Woody, spicy & bold",
-    image: "/category/forhim.png",
-  },
-  {
-    href: "/products?for=her",
-    label: "Women",
-    sub: "Florals & gourmands",
-    image: "/category/forher.png",
-  },
-  {
-    href: "/products?for=unisex",
-    label: "Unisex",
-    sub: "Fresh, for everyone",
-    image: "/category/unisex.png",
-  },
-];
+export function CollectionTiles() {
+  return (
+    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:gap-6">
+      {collections.map((c,index) => (
+        <Link
+          key={c.handle}
+          href={`/collections/${c.handle}`}
+          className={`group relative block aspect-[3/4] overflow-hidden ${index === 2 ? "col-span-2 sm:col-span-1" : ""}`}
+        >
+          <Image
+            src={c.image}
+            alt={`Shop ${c.title} fragrances`}
+            fill
+            sizes="(max-width: 640px) 90vw, 33vw"
+            className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.06]"
+          />
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export function CategoryGrid() {
   return (
@@ -35,23 +37,8 @@ export function CategoryGrid() {
         </h2>
       </Reveal>
 
-      <div className="mt-8 lg:mt-12 grid gap-5 sm:grid-cols-3 lg:gap-6">
-        {tiles.map((tile) => (
-            <Link
-              key={tile.label}
-              href={tile.href}
-              className="group relative block aspect-[3/4] overflow-hidden"
-            >
-              <Image
-                src={tile.image}
-                alt={`Shop ${tile.label} fragrances`}
-                fill
-                sizes="(max-width: 640px) 90vw, 33vw"
-                className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.06]"
-              />
-              
-            </Link>
-        ))}
+      <div className="mt-8 lg:mt-12">
+        <CollectionTiles />
       </div>
     </section>
   );

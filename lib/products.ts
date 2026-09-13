@@ -1,30 +1,40 @@
-export type CollectionKey = "bestsellers" | "new-arrivals" | "summer";
+export type CollectionHandle = "for-him" | "for-her" | "unisex";
 
 export type Collection = {
-  key: CollectionKey;
-  label: string;
-  tagline: string;
+  handle: CollectionHandle;
+  title: string;
+  description: string;
+  image: string;
 };
 
 export const collections: Collection[] = [
   {
-    key: "bestsellers",
-    label: "Bestsellers",
-    tagline: "The fragrances everyone keeps coming back to",
+    handle: "for-him",
+    title: "For Him",
+    description: "Woody, spicy and fresh compositions, made to be worn by him.",
+    image: "https://images.nifsperfume.com/forhim.webp",
   },
   {
-    key: "new-arrivals",
-    label: "New Arrivals",
-    tagline: "Fresh from the NIFS lab — just launched",
+    handle: "for-her",
+    title: "For Her",
+    description: "Florals and warm gourmands, made to be worn by her.",
+    image: "https://images.nifsperfume.com/forher.webp",
   },
   {
-    key: "summer",
-    label: "For Summer",
-    tagline: "Light, fresh picks made for warm days",
+    handle: "unisex",
+    title: "Unisex",
+    description: "Fresh, versatile signatures for everyone.",
+    image: "https://images.nifsperfume.com/unisex.webp",
   },
 ];
 
 export type Gender = "him" | "her" | "unisex";
+
+export const categoryLabel: Record<Gender, string> = {
+  him: "For Men",
+  her: "For Women",
+  unisex: "Unisex (Men & Women)",
+};
 
 export type Product = {
   slug: string;
@@ -34,177 +44,369 @@ export type Product = {
   gender: Gender;
   description: string;
   price: number;
+  /** list price (MRP); the discount is shown against it */
   mrp: number;
-  rating: number;
-  reviews: number;
-  badge?: "Bestseller" | "New";
   sizes: string[];
-  wear: string;
-  notes: { top: string[]; heart: string[]; base: string[] };
-  collections: CollectionKey[];
+  longevity: string;
+  sillage: string;
+  notes: { top: string[]; middle: string[]; base: string[] };
+  ingredients: string;
+  howToUse: { step: string; text: string }[];
+  specs: {
+    formulation: string;
+    targetGender: string;
+    volume: string;
+    idealWear: string;
+    packaging: string;
+    storage: string;
+  };
+  collections: CollectionHandle[];
   image: string;
 };
+
+const INGREDIENTS =
+  "Alcohol Denat., Fragrance (Parfum), Aqua (Water), Fragrance Oil.";
 
 export const products: Product[] = [
   {
     slug: "magnificent",
     name: "Magnificent",
     tagline: "Bold. Warm. Unforgettable.",
-    family: "Woody Amber",
-    gender: "him",
+    family: "Oriental Floral Fougère / Fresh Warm Floral",
+    gender: "her",
     description:
-      "A rich woody amber built for presence — saffron and bergamot open into smoky amberwood and vetiver. Made to last from boardroom to after-hours.",
-    price: 849,
-    mrp: 1499,
-    rating: 4.8,
-    reviews: 1214,
-    badge: "Bestseller",
+      "Magnificent by NIFS Perfume is a grand and captivating Oriental Fougère fragrance. It opens with an invigorating burst of aromatic lavender, juicy mandarin orange, tart black currant, and crisp petitgrain. The heart reveals an elegant floral bouquet of orange blossom and jasmine layered with lush lavender, leading into a luxurious, warm base of Madagascan vanilla, velvety musk, grounding cedar, and rich ambergris.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "10–12 hours",
+    longevity: "8–12 hours",
+    sillage: "Moderate to Strong (Elegant, memorable floral-vanilla trail)",
     notes: {
-      top: ["Saffron", "Bergamot"],
-      heart: ["Amberwood", "Cedar"],
-      base: ["Vetiver", "Musk", "Tonka"],
+      top: ["Lavender", "Mandarin Orange", "Black Currant", "Petitgrain"],
+      middle: ["Lavender", "Orange Blossom", "Jasmine"],
+      base: ["Madagascan Vanilla", "Musk", "Cedar", "Ambergris"],
     },
-    collections: ["bestsellers"],
-    image: "/products/magnificient.jpeg",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Apply directly to clean, dry, and moisturized skin—ideally after showering—to boost longevity.",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Spray 1–2 bursts onto pulse points such as your wrists, neck, behind ears, and inner elbows.",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Allow the fragrance to dry down naturally; rubbing wrists together crushes the delicate top floral notes.",
+      },
+      {
+        step: "Clothing Application",
+        text: "Spray lightly on scarves, jackets, or hair from a distance of 6–8 inches for an intensified scent trail.",
+      },
+    ],
+    specs: {
+      formulation: "Eau de Parfum (EDP Spray)",
+      targetGender: "Unisex / Women",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear: "Spring/Fall seasons, office wear, evening outings, or formal events",
+      packaging: "Glass Spray Bottle with Black Cap",
+      storage: "Store in a cool, dry place away from direct sunlight and heat exposure.",
+    },
+    collections: ["for-her"],
+    image: "https://images.nifsperfume.com/magnificient.jpeg",
   },
   {
     slug: "wanderlust",
     name: "Wanderlust",
     tagline: "Pack light. Smell incredible.",
-    family: "Fresh Aquatic",
+    family: "Citrus Aromatic / Fresh Spicy",
     gender: "unisex",
     description:
-      "Sea breeze in a bottle — marine notes, crisp apple and lavender over clean white musk. The one you reach for without thinking.",
-    price: 799,
-    mrp: 1399,
-    rating: 4.7,
-    reviews: 968,
-    badge: "Bestseller",
+      "Wanderlust by NIFS Perfume is a vibrant Citrus Aromatic fragrance crafted for both men and women. Opening with a bright splash of Mediterranean citrus, it transitions into a warm, invigorating heart of exotic spices and fresh orange blossom before settling into a sophisticated, smoky-woody tea base.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "8–10 hours",
+    longevity: "8–12 hours",
+    sillage: "Moderate to Strong (Invigorating fresh trail)",
     notes: {
-      top: ["Marine Accord", "Green Apple"],
-      heart: ["Lavender", "Geranium"],
-      base: ["White Musk", "Ambergris"],
+      top: ["Citron", "Calabrian Bergamot", "Sicilian Orange"],
+      middle: ["Tunisian Neroli", "Nigerian Ginger", "Ceylon Cinnamon"],
+      base: ["Chinese Black Tea", "Ambroxan", "Guaiac Wood", "Olibanum"],
     },
-    collections: ["bestsellers", "new-arrivals", "summer"],
-    image: "/products/wanderlust.PNG",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Spray onto clean, moisturized skin (apply right after a shower for optimal absorption).",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Apply 1–2 spritzes to pulse points such as wrists, sides of the neck, and inner elbows.",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Let the fragrance dry down naturally on the skin to preserve the delicate citrus top notes.",
+      },
+      {
+        step: "Application Distance",
+        text: "Hold the spray bottle 6–8 inches away from your skin or clothing when applying.",
+      },
+    ],
+    specs: {
+      formulation: "Eau de Parfum (EDP Spray)",
+      targetGender: "Unisex",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear: "Summer/Spring seasons, daily casual wear, office, or travel",
+      packaging: "Glass Spray Bottle with Black Cap",
+      storage: "Store in a cool, dry place away from direct heat and sunlight.",
+    },
+    collections: ["unisex", "for-him", "for-her"],
+    image: "https://images.nifsperfume.com/wanderlust.jpg",
   },
   {
     slug: "morning-drift",
     name: "Morning Drift",
     tagline: "Your 7 AM in a bottle",
-    family: "Citrus Fresh",
-    gender: "unisex",
+    family: "Woody Citrus Spicy / Leather Vetiver",
+    gender: "him",
     description:
-      "Sparkling citrus with a cool minty edge — Sicilian lemon, mandarin and mint over soft cedar. Fresh laundry, first coffee, open windows.",
-    price: 749,
-    mrp: 1299,
-    rating: 4.6,
-    reviews: 412,
-    badge: "New",
+      "Morning Drift offers a luminous opening full of sparkling citruses and energy. Bergamot and grapefruit provide a strong and dynamic beginning in the opening notes. A heart of the composition offers spicy shades of nutmeg combined with leather, while a base features elegant woody accords of cedar and vetiver.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "6–8 hours",
+    longevity: "8–12 hours",
+    sillage: "Strong to Moderate (Dynamic citrus-woody trail)",
     notes: {
-      top: ["Sicilian Lemon", "Mandarin", "Mint"],
-      heart: ["Neroli", "Green Tea"],
-      base: ["Cedar", "White Musk"],
+      top: ["Grapefruit", "Bergamot"],
+      middle: ["Nutmeg", "Leather"],
+      base: ["Vetiver", "Virginia Cedar", "Ambergris"],
     },
-    collections: ["new-arrivals", "summer"],
-    image: "/products/morning_drift.jpeg",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Apply directly to clean, dry, and moisturized skin right after a shower for max retention.",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Spray 1–2 bursts onto warm pulse points like your wrists, neck, behind ears, and chest.",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Allow the liquid to dry down naturally on the skin; rubbing breaks down the crisp citrus top notes.",
+      },
+      {
+        step: "Clothing Application",
+        text: "Spray lightly on shirts or suit jackets from a distance of 6–8 inches for an extended scent trail throughout the day.",
+      },
+    ],
+    specs: {
+      formulation: "Eau de Parfum (EDP Spray)",
+      targetGender: "Male",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear:
+        "Spring/Summer seasons, morning/daytime wear, office, business meetings, or daily active wear",
+      packaging: "Glass Spray Bottle with Black Cap",
+      storage: "Store in a cool, dry place away from direct sunlight and heat exposure.",
+    },
+    collections: ["for-him"],
+    image: "https://images.nifsperfume.com/morning_drift.jpeg",
   },
   {
     slug: "blush-bloom",
     name: "Blush Bloom",
     tagline: "Soft petals, sharp memory",
-    family: "Floral",
+    family: "Floral Fruity Gourmand / Warm Solar Floral",
     gender: "her",
     description:
-      "A modern floral that never turns heavy — rose, peony and lychee over sandalwood. Feminine, clean, and quietly addictive.",
-    price: 799,
-    mrp: 1399,
-    rating: 4.8,
-    reviews: 1053,
-    badge: "Bestseller",
+      "A joyful floral signature, the scent is built around the Gardenia flower, admired since the dawn of time for its splendour and said to be used in elixirs and magical potions. Taking inspiration from this legend and the idea of its mystical power, the gorgeous White Gardenia note is blended with solar Jasmine Grandiflorum Absolute. The modern floral signature is introduced by a cheerful Pear Blossom accord which encourages wearers to burst with joy, while a touch of Brown Sugar accord adds a delicate sweetness to its sillage.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "8–10 hours",
+    longevity: "8–12 hours",
+    sillage: "Moderate to Strong (Sweet, uplifting floral trail)",
     notes: {
-      top: ["Lychee", "Pink Pepper"],
-      heart: ["Rose", "Peony"],
-      base: ["Sandalwood", "Musk"],
+      top: ["Pear Blossom", "Red Berries", "Italian Mandarin"],
+      middle: ["Gardenia", "Jasmine", "Frangipani"],
+      base: ["Brown Sugar", "Patchouli"],
     },
-    collections: ["bestsellers", "summer"],
-    image: "/products/blush_bloom.jpeg",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Apply directly to clean, dry, and moisturized skin right after a shower for max retention.",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Spray 1–2 bursts onto warm pulse points like your wrists, neck, behind ears, and inner elbows.",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Allow the liquid to dry down naturally on the skin; rubbing breaks down the delicate floral top notes.",
+      },
+      {
+        step: "Clothing Application",
+        text: "Spray lightly on clothes or hair from a distance of 6–8 inches for an enhanced scent trail.",
+      },
+    ],
+    specs: {
+      formulation: "Eau de Parfum (EDP Spray)",
+      targetGender: "Female",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear:
+        "Spring/Summer seasons, daily daytime wear, brunches, or romantic outings",
+      packaging: "Glass Spray Bottle with Black Cap",
+      storage: "Store in a cool, dry place away from direct sunlight and heat exposure.",
+    },
+    collections: ["for-her"],
+    image: "https://images.nifsperfume.com/blush_bloom.jpeg",
   },
   {
-    slug: "promise-him",
-    name: "Promise Him",
+    slug: "promise-you",
+    name: "Promise You",
     tagline: "The gift he won't stop wearing",
-    family: "Spicy Woody",
+    family: "Oriental Fougère / Sweet Warm Spicy",
     gender: "him",
     description:
-      "Cardamom and black pepper over leather and oakwood — a confident, spicy signature that reads expensive and wears all day.",
-    price: 849,
-    mrp: 1499,
-    rating: 4.7,
-    reviews: 634,
+      "Promise You by NIFS Perfume is an alluring Oriental Fougère fragrance crafted for men. It opens with an intriguing blend of vibrant pink pepper, aromatic juniper, and delicate violet. The scent then unfolds into a rich, cozy heart of sweet toffee, spicy cinnamon, fresh lavender, and sage, before settling into a warm, velvety base of vanilla, rich amber, tonka bean, and supple suede.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "10 hours",
+    longevity: "8–12 hours",
+    sillage: "Moderate to Strong (Warm, inviting, gourmand-spicy scent trail)",
     notes: {
-      top: ["Cardamom", "Black Pepper"],
-      heart: ["Leather", "Cinnamon"],
-      base: ["Oakwood", "Amber"],
+      top: ["Pink Pepper", "Juniper", "Violet"],
+      middle: ["Toffee", "Cinnamon", "Lavender", "Sage"],
+      base: ["Vanilla", "Amber", "Tonka Bean", "Suede"],
     },
-    collections: ["new-arrivals"],
-    image: "/products/promise_him1.jpeg",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Spray directly onto clean, dry, and moisturized skin right after a shower for max longevity.",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Hold the bottle 6–8 inches away and apply to warm areas such as wrists, neck, and inner elbows.",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Allow the liquid to air-dry naturally; rubbing wrists together breaks down the sweet top and heart notes prematurely.",
+      },
+      {
+        step: "Clothing Application",
+        text: "Spray lightly on shirts or jackets from a distance for extended scent presence throughout the day.",
+      },
+    ],
+    specs: {
+      formulation: "Eau de Parfum (EDP Spray)",
+      targetGender: "Unisex / Men",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear: "Fall/Winter seasons, evening events, date nights, or special occasions",
+      packaging: "Glass Spray Bottle with Black Cap",
+      storage: "Store in a cool, dry place away from direct sunlight and heat exposure.",
+    },
+    collections: ["for-him"],
+    image: "https://images.nifsperfume.com/promise_him1.jpeg",
   },
   {
     slug: "vanilla-goddess",
     name: "Vanilla Goddess",
     tagline: "Warm. Sweet. Divine.",
-    family: "Vanilla Gourmand",
+    family: "Warm Amber Floral / Oriental Gourmand",
     gender: "her",
     description:
-      "Bourbon vanilla whipped with caramel and jasmine — a gourmand that stays elegant, never sugary. Compliments guaranteed.",
-    price: 899,
-    mrp: 1599,
-    rating: 4.9,
-    reviews: 1387,
-    badge: "Bestseller",
+      "Captivate the senses with Vanilla Goddess, a masterpiece of refined and cultivated nuance. A time-honored union of creamy Jasmine and rich Madagascan Vanilla Orchid draws out the sweet softness of Brazilian Tonka. Beautifully balanced oriental notes of Musk, Patchouli, and Brown Sugar form the distinguished wood base of this utterly sublime scent.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "12 hours",
+    longevity: "8–12 hours",
+    sillage: "Moderate to Strong (Creates a warm, sweet aura)",
     notes: {
-      top: ["Caramel", "Bergamot"],
-      heart: ["Bourbon Vanilla", "Jasmine"],
-      base: ["Tonka", "Sandalwood", "Musk"],
+      top: ["Vanilla Orchid", "Jasmine"],
+      middle: ["Brown Sugar", "Tonka Bean"],
+      base: ["Amber", "Amberwood", "Musk", "Patchouli"],
     },
-    collections: ["bestsellers"],
-    image: "/products/vanilla_goddes.PNG",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Apply on clean, dry skin—preferably after showering and applying an unscented lotion to extend performance.",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Spray 1–2 bursts directly onto pulse points (wrists, neck, behind the ears, and inner elbows).",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Allow the fragrance to air-dry naturally on the skin; rubbing the wrists together breaks down the top notes faster.",
+      },
+      {
+        step: "Optional",
+        text: "Spray lightly on hair or clothing from a distance of 6–8 inches for an enhanced scent trail.",
+      },
+    ],
+    specs: {
+      formulation: "Liquid (Eau de Parfum / Extrait Spray)",
+      targetGender: "Female",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear: "Fall/Winter seasons, evening wear, dates, or special occasions",
+      packaging: "Spray Bottle",
+      storage:
+        "Store in a cool, dark place away from direct sunlight and extreme temperature changes.",
+    },
+    collections: ["for-her"],
+    image: "https://images.nifsperfume.com/vanilla_goddes.jpg",
   },
   {
     slug: "fascinating-jewel",
     name: "Fascinating Jewel",
     tagline: "Wear it like jewellery",
-    family: "Fruity Floral",
-    gender: "her",
+    family: "Fresh Woody Citrus / Amber Floral",
+    gender: "unisex",
     description:
-      "Blackcurrant and pear sparkle over orange blossom and patchouli — bright on arrival, magnetic by evening.",
-    price: 829,
-    mrp: 1449,
-    rating: 4.6,
-    reviews: 289,
-    badge: "New",
+      "Fascinating Jewel by NIFS Perfume is a luminous, captivating scent designed for both men and women. Opening with a crisp splash of juicy pear, bright citrus, and subtle ginger spice, it unfolds into an elegant floral-woody heart before grounding into a sophisticated, modern musk and amber-wood base.",
+    price: 499,
+    mrp: 999,
     sizes: ["50 ml"],
-    wear: "8 hours",
+    longevity: "8–12 hours",
+    sillage: "Moderate to Strong (Luminous, airy trail)",
     notes: {
-      top: ["Blackcurrant", "Pear"],
-      heart: ["Orange Blossom", "Jasmine"],
-      base: ["Patchouli", "Vanilla"],
+      top: ["Pear", "Bergamot", "Mandarin Orange", "Ginger"],
+      middle: ["Orange Blossom", "Georgywood"],
+      base: ["Musk", "Ambrofix™", "Akigalawood", "Cedar"],
     },
-    collections: ["new-arrivals", "summer"],
-    image: "/products/fascinating_jewel.PNG",
+    ingredients: INGREDIENTS,
+    howToUse: [
+      {
+        step: "Prep",
+        text: "Apply directly to clean, dry, and moisturized skin right after a shower for the best scent retention.",
+      },
+      {
+        step: "Target Pulse Points",
+        text: "Hold the bottle 6–8 inches away and spray onto warm areas like wrists, neck, and behind ears.",
+      },
+      {
+        step: "Do Not Rub",
+        text: "Allow the liquid to dry down naturally on the skin; rubbing breaks down the top fruit and floral notes.",
+      },
+      {
+        step: "Layering",
+        text: "Spray lightly on hair or clothing for enhanced longevity throughout the day.",
+      },
+    ],
+    specs: {
+      formulation: "Eau de Parfum (EDP Spray)",
+      targetGender: "Unisex",
+      volume: "50 ml / 1.7 fl. oz.",
+      idealWear:
+        "All-year-round, day-to-night transitions, office wear, or social gatherings",
+      packaging: "Glass Spray Bottle with Black Cap",
+      storage: "Store in a cool, dry place away from direct sunlight and heat exposure.",
+    },
+    collections: ["unisex", "for-him", "for-her"],
+    image: "https://images.nifsperfume.com/fascinating_jewel.jpg",
   },
 ];
 
@@ -212,17 +414,15 @@ export function getProduct(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
-export function getByCollection(key: CollectionKey): Product[] {
-  return products.filter((p) => p.collections.includes(key));
+export function getCollection(handle: string): Collection | undefined {
+  return collections.find((c) => c.handle === handle);
 }
 
-export function getByGender(gender: Gender): Product[] {
-  return products.filter(
-    (p) => p.gender === gender || p.gender === "unisex",
-  );
+export function getCollectionProducts(handle: CollectionHandle): Product[] {
+  return products.filter((p) => p.collections.includes(handle));
 }
 
-export function getRelated(product: Product, count = 3): Product[] {
+export function getRelated(product: Product, count = 4): Product[] {
   const scored = products
     .filter((p) => p.slug !== product.slug)
     .map((p) => ({

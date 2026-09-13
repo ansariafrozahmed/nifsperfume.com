@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { EnquiryForm } from "@/components/enquiry-form";
+import type { ReactNode } from "react";
 import { ProductCard } from "@/components/product-card";
-import { Rating } from "@/components/rating";
+import { QuickEnquiry } from "@/components/quick-enquiry";
 import { Reveal } from "@/components/reveal";
 import {
+  categoryLabel,
   discountPercent,
   formatPrice,
+  getCollection,
   getProduct,
   getRelated,
   products,
@@ -30,7 +32,41 @@ export async function generateMetadata({
   };
 }
 
-const genderLabel = { him: "For Him", her: "For Her", unisex: "Unisex" };
+function SectionTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="text-[11px] font-semibold uppercase tracking-[0.3em]">
+      {children}
+    </h2>
+  );
+}
+
+function Accordion({
+  title,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <details open={defaultOpen} className="group border-b border-line">
+      <summary className="flex cursor-pointer list-none items-center justify-between py-5 [&::-webkit-details-marker]:hidden">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.3em]">
+          {title}
+        </span>
+        <span
+          aria-hidden
+          className="relative h-3 w-3 transition-transform duration-300 group-open:rotate-45"
+        >
+          <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-ink" />
+          <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink" />
+        </span>
+      </summary>
+      <div className="pb-6">{children}</div>
+    </details>
+  );
+}
 
 export default async function ProductPage({
   params,
@@ -41,6 +77,22 @@ export default async function ProductPage({
 
   const related = getRelated(product);
   const off = discountPercent(product);
+  const collection = getCollection(product.collections[0]);
+
+  const pyramid = [
+    { tier: "Top Notes", notes: product.notes.top },
+    { tier: "Middle Notes", notes: product.notes.middle },
+    { tier: "Base Notes", notes: product.notes.base },
+  ];
+
+  const specs = [
+    ["Formulation", product.specs.formulation],
+    ["Target Gender", product.specs.targetGender],
+    ["Bottle Volume", product.specs.volume],
+    ["Ideal Wear", product.specs.idealWear],
+    ["Packaging", product.specs.packaging],
+    ["Storage", product.specs.storage],
+  ];
 
   return (
     <div className="pt-10">
@@ -53,9 +105,20 @@ export default async function ProductPage({
             Home
           </Link>
           <span className="mx-3">/</span>
-          <Link href="/products" className="transition-colors hover:text-ink">
-            Fragrances
+          <Link href="/collections" className="transition-colors hover:text-ink">
+            Collections
           </Link>
+          {collection && (
+            <>
+              <span className="mx-3">/</span>
+              <Link
+                href={`/collections/${collection.handle}`}
+                className="transition-colors hover:text-ink"
+              >
+                {collection.title}
+              </Link>
+            </>
+          )}
           <span className="mx-3">/</span>
           <span className="text-ink">{product.name}</span>
         </nav>
@@ -72,21 +135,16 @@ export default async function ProductPage({
                 sizes="(max-width: 1024px) 95vw, 48vw"
                 className="object-cover"
               />
-              {product.badge && (
-                <span className="absolute left-0 top-5 bg-white px-4 py-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-ink">
-                  {product.badge}
-                </span>
-              )}
             </div>
             <div className="grid grid-cols-3 border border-t-0 border-line text-center">
               {[
-                ["Lasts", product.wear],
-                ["Wearer", genderLabel[product.gender]],
-                ["Type", "Eau de Parfum"],
+                ["Longevity", product.longevity],
+                ["Category", categoryLabel[product.gender].split(" (")[0]],
+                ["Size", product.sizes[0]],
               ].map(([label, value], i) => (
                 <div
                   key={label}
-                  className={`py-4 ${i > 0 ? "border-l border-line" : ""}`}
+                  className={`px-2 py-4 ${i > 0 ? "border-l border-line" : ""}`}
                 >
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted">
                     {label}
@@ -100,24 +158,21 @@ export default async function ProductPage({
           {/* ————— details ————— */}
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-gold">
-              {product.family} · {product.sizes[0]}
+              {categoryLabel[product.gender]} · {product.sizes[0]}
             </p>
             <h1 className="mt-4 font-display text-3xl font-semibold uppercase tracking-[0.14em] md:text-4xl">
               {product.name}
             </h1>
             <p className="mt-3 text-[15px] font-light text-muted">
-              {product.tagline}
+              {product.family}
             </p>
-
-            <div className="mt-5">
-              <Rating rating={product.rating} reviews={product.reviews} />
-            </div>
 
             <div className="mt-7 flex flex-wrap items-baseline gap-3 border-y border-line py-5">
               <span className="text-3xl font-semibold tracking-wide">
                 {formatPrice(product.price)}
               </span>
               <span className="text-base font-light text-muted line-through">
+                <span className="sr-only">MRP </span>
                 {formatPrice(product.mrp)}
               </span>
               <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
@@ -128,50 +183,98 @@ export default async function ProductPage({
               </span>
             </div>
 
-            <p className="mt-7 text-[15px] font-light leading-[1.9] text-ink">
-              {product.description}
-            </p>
+            <div className="mt-6">
+              <QuickEnquiry product={product} />
+            </div>
 
-            {/* notes */}
-            <div className="mt-10">
-              <h2 className="text-[11px] font-semibold uppercase tracking-[0.3em]">
-                Fragrance Notes
-              </h2>
-              <div className="mt-5 grid sm:grid-cols-3">
-                {(
-                  [
-                    ["Top", product.notes.top],
-                    ["Heart", product.notes.heart],
-                    ["Base", product.notes.base],
-                  ] as const
-                ).map(([tier, notes], i) => (
+            {/* about */}
+            <div className="mt-12">
+              <SectionTitle>About the Fragrance</SectionTitle>
+              <p className="mt-4 text-[15px] font-light leading-[1.9] text-ink">
+                {product.description}
+              </p>
+            </div>
+
+            {/* pyramid */}
+            <div className="mt-12">
+              <SectionTitle>Fragrance Pyramid</SectionTitle>
+              <dl className="mt-5 border-t border-line">
+                {pyramid.map(({ tier, notes }) => (
                   <div
                     key={tier}
-                    className={`border border-line p-5 ${
-                      i > 0 ? "-mt-px sm:-ml-px sm:mt-0" : ""
-                    }`}
+                    className="grid gap-2 border-b border-line py-4 sm:grid-cols-[140px_1fr] sm:gap-6"
                   >
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-gold">
+                    <dt className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
                       {tier}
-                    </p>
-                    <p className="mt-3 text-sm font-light leading-relaxed">
+                    </dt>
+                    <dd className="text-sm font-light leading-relaxed">
                       {notes.join(", ")}
-                    </p>
+                    </dd>
                   </div>
                 ))}
+              </dl>
+            </div>
+
+            {/* performance */}
+            <div className="mt-12">
+              <SectionTitle>Performance</SectionTitle>
+              <div className="mt-5 grid border border-line sm:grid-cols-2">
+                <div className="p-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
+                    Longevity
+                  </p>
+                  <p className="mt-2 text-lg font-medium">{product.longevity}</p>
+                </div>
+                <div className="border-t border-line p-5 sm:border-l sm:border-t-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
+                    Projection / Sillage
+                  </p>
+                  <p className="mt-2 text-sm font-light leading-relaxed">
+                    {product.sillage}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* enquiry */}
-            <div id="enquire" className="mt-12 scroll-mt-36">
-              <h2 className="text-[11px] font-semibold uppercase tracking-[0.3em]">
-                Enquire About {product.name}
-              </h2>
-              <p className="mb-6 mt-3 text-sm font-light leading-relaxed text-muted">
-                Fill this in and we&apos;ll get back to you within 24 hours
-                with availability and offers.
-              </p>
-              <EnquiryForm product={product} />
+            {/* details */}
+            <div className="mt-12 border-t border-line">
+              <Accordion title="How to Use" defaultOpen>
+                <ol className="space-y-4">
+                  {product.howToUse.map((s, i) => (
+                    <li key={s.step} className="flex gap-4">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center border border-gold/50 text-[10px] font-semibold text-gold">
+                        {i + 1}
+                      </span>
+                      <p className="text-sm font-light leading-relaxed">
+                        <span className="font-medium text-ink">{s.step}: </span>
+                        {s.text}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              </Accordion>
+
+              <Accordion title="Product Specifications">
+                <dl>
+                  {specs.map(([label, value]) => (
+                    <div
+                      key={label}
+                      className="grid gap-1 border-b border-line/70 py-3 last:border-b-0 sm:grid-cols-[140px_1fr] sm:gap-6"
+                    >
+                      <dt className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+                        {label}
+                      </dt>
+                      <dd className="text-sm font-light leading-relaxed">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Accordion>
+
+              <Accordion title="Ingredients">
+                <p className="text-sm font-light leading-relaxed">
+                  {product.ingredients}
+                </p>
+              </Accordion>
             </div>
           </div>
         </div>
@@ -186,14 +289,14 @@ export default async function ProductPage({
                 You May Also Like
               </h2>
               <Link
-                href="/products"
+                href={collection ? `/collections/${collection.handle}` : "/collections"}
                 className="link-sweep hidden text-[10px] font-medium uppercase tracking-[0.3em] sm:block"
               >
                 View All
               </Link>
             </div>
           </Reveal>
-          <div className="mt-10 grid grid-cols-2 gap-5 lg:grid-cols-3 lg:gap-6">
+          <div className="mt-10 grid grid-cols-2 gap-5 lg:grid-cols-4 lg:gap-6">
             {related.map((p, i) => (
               <Reveal key={p.slug} delay={i * 90}>
                 <ProductCard product={p} />

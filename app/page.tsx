@@ -1,53 +1,57 @@
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { CategoryGrid } from "@/components/category-grid";
-import { ProductGrid } from "@/components/product-grid";
+import { CollectionProductGrid, ProductGrid } from "@/components/product-grid";
 import { Reveal } from "@/components/reveal";
+
+// width/height must match each file's real pixel size, or the space reserved
+// before the image loads will be the wrong shape.
+const HERO_DESKTOP = {
+  src: "https://images.nifsperfume.com/nifsperfumehero.jpeg",
+  width: 1672,
+  height: 941,
+};
+const HERO_MOBILE = {
+  src: "https://images.nifsperfume.com/nifsperfumeheromobile.jpeg",
+  width: 1024,
+  height: 1536,
+};
+const HERO_ALT = "The NIFS Perfume collection";
 
 export default function HomePage() {
   // Art direction: a landscape hero on desktop, a portrait crop on mobile.
   // <picture> lets the browser download only the one that matches.
-  const heroCommon = {
-    alt: "The NIFS Perfume collection",
-    sizes: "100vw",
-    quality: 100,
-  };
+  const heroCommon = { alt: HERO_ALT, sizes: "100vw", quality: 100 };
   const {
     props: { srcSet: heroDesktop },
-  } = getImageProps({
-    ...heroCommon,
-    src: "/wanderlust.png",
-    width: 1586,
-    height: 992,
-  });
+  } = getImageProps({ ...heroCommon, ...HERO_DESKTOP });
   const {
     props: { srcSet: heroMobile, ...heroImgProps },
-  } = getImageProps({
-    ...heroCommon,
-    src: "/wanderlustmobile.png",
-    width: 1024,
-    height: 1536,
-  });
+  } = getImageProps({ ...heroCommon, ...HERO_MOBILE });
 
   return (
     <>
       {/* ————— HERO: the photograph speaks ————— */}
-      <section className="relative h-[70vh] lg:h-svh overflow-hidden bg-cream">
-        <div className="animate-hero-zoom absolute inset-0">
-          <picture className="block h-full w-full">
-            <source media="(min-width: 1024px)" srcSet={heroDesktop} />
-            {/* eslint-disable-next-line @next/next/no-img-element -- getImageProps art direction, per next/image docs */}
+      <section className="relative overflow-hidden bg-cream">
+        <div className="animate-hero-zoom">
+          <picture className="block w-full">
+            <source
+              media="(min-width: 1024px)"
+              srcSet={heroDesktop}
+              width={HERO_DESKTOP.width}
+              height={HERO_DESKTOP.height}
+            />
             <img
               {...heroImgProps}
+              alt={HERO_ALT}
               srcSet={heroMobile}
               loading="eager"
               fetchPriority="high"
-              className="h-full w-full object-cover object-top"
+              className="block h-auto w-full"
             />
           </picture>
         </div>
-
-              </section>
+      </section>
 
       {/* ————— SHOP BY CATEGORY ————— */}
       <CategoryGrid />
@@ -55,15 +59,20 @@ export default function HomePage() {
       {/* ————— ALL PRODUCTS ————— */}
       <ProductGrid />
 
+      {/* ————— ONE SECTION PER COLLECTION ————— */}
+      <CollectionProductGrid handle="for-him" />
+      <CollectionProductGrid handle="for-her" />
+      <CollectionProductGrid handle="unisex" />
+
       {/* ————— ABOUT US ————— */}
       <section className="bg-charcoal text-white">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-32">
           <Reveal>
             <div className="relative">
               <div className="absolute -right-4 -top-4 hidden h-full w-full border border-gold/40 lg:block" />
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <div className="relative aspect-[4/4] overflow-hidden">
                 <Image
-                  src="/hero.png"
+                  src="https://images.nifsperfume.com/ChatGPT%20Image%20Sep%2013%2C%202026%2C%2005_51_40%20PM.jpeg"
                   alt="NIFS Perfume bottles"
                   fill
                   sizes="(max-width: 1024px) 90vw, 45vw"
@@ -143,10 +152,10 @@ export default function HomePage() {
                 Get a Recommendation
               </Link>
               <Link
-                href="/products"
+                href="/collections"
                 className="border border-ink px-10 py-4 text-[11px] rounded-lg font-medium uppercase tracking-[0.28em] transition-colors duration-300 hover:bg-ink hover:text-white"
               >
-                Browse All Seven
+                Shop Collections
               </Link>
             </div>
           </Reveal>

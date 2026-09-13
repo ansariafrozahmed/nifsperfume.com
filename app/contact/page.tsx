@@ -1,25 +1,53 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/contact-form";
 import { Reveal } from "@/components/reveal";
+import { contact, telHref, whatsappHref } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with NIFS PERFUME — product enquiries, bulk orders, gifting and partnerships. We reply within 24 hours.",
+    "Get in touch with NIFS PERFUME on WhatsApp, by phone or by email — product enquiries, bulk orders and gifting. We reply within 24 hours.",
 };
 
-const details = [
+const channels = [
   {
-    label: "Visit Us",
-    lines: ["NIFS Perfume HQ", "Andheri East, Mumbai 400069"],
+    label: "WhatsApp",
+    value: contact.phoneDisplay,
+    note: "Fastest reply — scent advice, orders and bulk pricing",
+    cta: "Chat on WhatsApp",
+    href: whatsappHref("Hi NIFS Perfume, I have a question."),
+    external: true,
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden>
+        <path d="M12 2.2A9.8 9.8 0 003.6 17l-1.4 4.8 4.9-1.3A9.8 9.8 0 1012 2.2zm0 17.9a8.1 8.1 0 01-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8.1 8.1 0 1112 20.1zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 00-.7.3 2.8 2.8 0 00-.9 2.1 4.9 4.9 0 001 2.6 11.2 11.2 0 004.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 001.7-1.2 2.1 2.1 0 00.1-1.2c0-.1-.2-.2-.4-.3z" />
+      </svg>
+    ),
   },
   {
-    label: "Talk to Us",
-    lines: ["hello@nifsperfume.com", "+91 98000 00000 (WhatsApp)"],
+    label: "Call Us",
+    value: contact.phoneDisplay,
+    note: "Speak to our team, Mon – Sat, 10 AM – 7 PM IST",
+    cta: "Call Now",
+    href: telHref,
+    external: false,
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+        <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z" />
+      </svg>
+    ),
   },
   {
-    label: "Hours",
-    lines: ["Mon – Sat · 10 AM – 7 PM IST", "We reply within 24 hours"],
+    label: "Email",
+    value: contact.email,
+    note: "For detailed enquiries, partnerships and gifting",
+    cta: "Send an Email",
+    href: `mailto:${contact.email}?subject=${encodeURIComponent("Enquiry — NIFS Perfume")}`,
+    external: false,
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+        <rect x="3" y="5" width="18" height="14" />
+        <path d="M3 6l9 7 9-7" />
+      </svg>
+    ),
   },
 ];
 
@@ -28,53 +56,53 @@ export default function ContactPage() {
     <div className="mx-auto max-w-7xl px-5 pb-24 pt-14 lg:px-10 lg:pt-20">
       <header className="text-center">
         <p className="eyebrow-rule text-[11px] font-medium uppercase tracking-[0.45em] text-gold">
-          Correspondence
+          Get in Touch
         </p>
         <h1 className="mt-6 font-display text-2xl font-semibold uppercase tracking-[0.18em] md:text-3xl">
           Contact Us
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-[15px] font-light leading-[1.9] text-muted">
-          Questions about a fragrance, bulk and gifting orders, partnerships —
-          or just need a scent recommendation? Write to us.
+          Questions about a fragrance, bulk and gifting orders, or need a scent
+          recommendation? Reach us however suits you.
         </p>
       </header>
 
-      <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
-        <div className="space-y-10">
-          {details.map((d, i) => (
-            <Reveal key={d.label} delay={i * 90}>
-              <div className="border-l border-gold/50 pl-7">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">
-                  {d.label}
-                </p>
-                {d.lines.map((line) => (
-                  <p key={line} className="mt-2 text-[15px] font-light text-ink">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </Reveal>
-          ))}
-
-          <Reveal delay={300}>
-            <div className="bg-charcoal p-8 text-white">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-light">
-                Fastest Way to Reach Us
-              </p>
-              <p className="mt-4 text-sm font-light leading-[1.9] text-white/65">
-                WhatsApp us for scent recommendations, order help and bulk
-                pricing — average reply time under 2 hours.
-              </p>
-            </div>
+      <div className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
+        {channels.map((c, i) => (
+          <Reveal key={c.label} delay={i * 90}>
+            <a
+              href={c.href}
+              {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="sweep-parent group flex h-full flex-col border border-line p-8 transition-colors duration-300 hover:border-ink lg:p-10"
+            >
+              <span className="flex h-14 w-14 items-center justify-center border border-gold/40 text-gold transition-colors duration-300 group-hover:border-gold group-hover:bg-gold group-hover:text-white">
+                {c.icon}
+              </span>
+              <span className="mt-7 text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">
+                {c.label}
+              </span>
+              <span className="mt-2 break-all text-lg font-medium text-ink">
+                {c.value}
+              </span>
+              <span className="mt-2 flex-1 text-sm font-light leading-relaxed text-muted">
+                {c.note}
+              </span>
+              <span className="mt-7 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-ink">
+                <span className="link-sweep">{c.cta}</span>
+                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  →
+                </span>
+              </span>
+            </a>
           </Reveal>
-        </div>
-
-        <Reveal delay={120}>
-          <div className="border border-line p-7 lg:p-10">
-            <ContactForm />
-          </div>
-        </Reveal>
+        ))}
       </div>
+
+      <Reveal delay={300}>
+        <p className="mt-12 text-center text-[11px] font-light uppercase tracking-[0.25em] text-muted">
+          Mon – Sat · 10 AM – 7 PM IST · We reply within 24 hours
+        </p>
+      </Reveal>
     </div>
   );
 }

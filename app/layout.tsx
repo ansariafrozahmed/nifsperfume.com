@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 
 
 
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s — NIFS PERFUME",
   },
   description:
-    "Long-lasting luxury Eau de Parfum crafted in India. Seven signature fragrances for him, her and everyone — starting at ₹749.",
+    "Long-lasting luxury Eau de Parfum crafted in India. Seven signature fragrances for him, her and everyone — all at ₹499.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <WhatsAppFloat />
       </body>
     </html>
   );
